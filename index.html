@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>I'm Sorry</title>
+  <style>
+    /* Page layout */
+    :root{
+      --bg1:#2b0b17;   /* deep */
+      --bg2:#ff9bb3;   /* soft rose */
+      --card:#fff8fb;
+      --accent:#ff5e9e;
+      --muted: rgba(255,255,255,0.85);
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background: linear-gradient(135deg,var(--bg1) 0%, #5b1630 30%, #b84b6d 60%, var(--bg2) 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    /* Card */
+    .card{
+      position:relative;
+      width:92%;
+      max-width:820px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border-radius:18px;
+      box-shadow: 0 12px 40px rgba(10,10,10,0.5);
+      padding:36px;
+      backdrop-filter: blur(6px);
+      color:var(--muted);
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    h1{
+      margin:0 0 12px 0;
+      font-size:28px;
+      letter-spacing:0.4px;
+      color: #fff;
+      text-shadow: 0 4px 22px rgba(0,0,0,0.45);
+    }
+
+    .message{
+      font-size:18px;
+      line-height:1.6;
+      white-space:pre-wrap;
+      opacity:0;
+      transform: translateY(6px);
+    }
+
+    /* Each line will fade in sequentially */
+    .line{
+      opacity:0;
+      transform: translateY(10px);
+      transition: opacity 700ms ease, transform 700ms ease;
+      margin-bottom:12px;
+    }
+    .line.visible{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    .controls{
+      margin-top:22px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+
+    .btn{
+      background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      color: white;
+      padding:12px 18px;
+      font-size:16px;
+      border-radius:12px;
+      cursor:pointer;
+      box-shadow: 0 6px 18px rgba(145,45,80,0.18);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .btn:active{ transform: translateY(2px); }
+    .forgive{
+      background: linear-gradient(90deg,#ff7bb0,#ff4f93);
+      border:none;
+      color:white;
+      box-shadow: 0 10px 30px rgba(255,95,150,0.18);
+      animation: gentleGlow 2.8s ease-in-out infinite;
+    }
+    @keyframes gentleGlow{
+      0%{ box-shadow: 0 8px 20px rgba(255,95,150,0.12); transform: translateY(0); }
+      50%{ box-shadow: 0 18px 40px rgba(255,95,150,0.22); transform: translateY(-3px); }
+      100%{ box-shadow: 0 8px 20px rgba(255,95,150,0.12); transform: translateY(0); }
+    }
+
+    /* Floating hearts */
+    .hearts{
+      pointer-events:none;
+      position:absolute;
+      inset:0;
+      overflow:visible;
+    }
+    .heart{
+      position:absolute;
+      width:28px;
+      height:28px;
+      transform: translate3d(0,0,0) scale(1);
+      opacity:0.95;
+      animation: floatUp linear forwards;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.2));
+    }
+    .heart svg{ width:100%; height:100%; display:block; }
+
+    @keyframes floatUp{
+      0%{ transform: translateY(0) scale(0.9); opacity:0; }
+      10%{ opacity:1; }
+      100%{ transform: translateY(-420px) scale(1.35); opacity:0; }
+    }
+
+    /* Final thank-you line */
+    .final{
+      margin-top:18px;
+      font-weight:700;
+      font-size:20px;
+      color:#fff;
+      opacity:0;
+      transform: translateY(6px);
+      transition: opacity 900ms ease, transform 900ms ease;
+    }
+    .final.visible{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    /* small helper */
+    .hint{
+      font-size:13px;
+      color: rgba(255,255,255,0.7);
+      opacity:0.9;
+    }
+
+    /* responsive */
+    @media (max-width:520px){
+      .card{ padding:22px; border-radius:14px; }
+      h1{ font-size:20px; }
+      .message{ font-size:16px; }
+      .btn{ padding:10px 14px; font-size:15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="title">
+    <div class="hearts" aria-hidden="true" id="heartsLayer"></div>
+
+    <h1 id="title">A message from me 💌</h1>
+
+    <!-- Message block - EXACT text preserved as requested -->
+    <div class="message" id="messageBlock">
+Heyyy my sweet girl... I couldn't find a better way to apologise than this... Anyway I am truly sorry for hurting today w the Maina thing... Please don't take it personally it's j how he is he just speaks without even thinking twice coz he has ever talked to Mumbi that way before but I apologise on his behalf.... The reason as to why I wasn't sure of blocking him it's coz I don't get why u haven't blocked those who talked bullshit to u earlier Ur j there fighting w them yes ik u want to revenge but still I don't get why for me u were so quick to block... Yes I do get Ur point that Ur friends have never talked to me in a rude way but still Maina doesn't know much abt u as much as Ur friends do... But anyway I am still so sorry... If there's anything else that has hurt u kindly let me know but even for what I don't know I am genuinely sorry... I j hope u forgive me coz u've said u ain't ready to talk to me yet and I'll respect that.... J know that I really do love you so much and I hope u do forgive me... I have been crying the whole night and decided to make u this hope u'll like it... I LOVE YOUUUU SO MUCH AND I AM SO SORRY
+    </div>
+
+    <div class="controls">
+      <button class="btn forgive" id="forgiveBtn">💖 Forgive Me</button>
+      <div class="hint">Music plays automatically and will loop.</div>
+    </div>
+
+    <div class="final" id="finalLine">Thank you, my love 💖</div>
+  </div>
+
+  <!-- Audio element -->
+  <audio id="bgAudio" loop preload="auto">
+    <!-- Placeholder instrumental (replace with a direct piano mp3 URL if you prefer) -->
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    // -- Helper: create a heart element --
+    function createHeart(xPercent, size, delay, color){
+      const container = document.getElementById('heartsLayer');
+      const el = document.createElement('div');
+      el.className = 'heart';
+      el.style.left = xPercent + '%';
+      el.style.bottom = '-20px';
+      el.style.width = size + 'px';
+      el.style.height = size + 'px';
+      el.style.animationDuration = (4 + Math.random()*3) + 's';
+      el.style.animationDelay = delay + 's';
+      el.innerHTML = `<svg viewBox="0 0 24 24" fill="${color}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-8.3C-0.6 7.2 4.9 2 8.8 4.1 10.6 5 12 7.1 12 7.1s1.4-2.1 3.2-3 9.4-.8 6.9 8.6C19.5 16.4 12 21 12 21z"/></svg>`;
+      container.appendChild(el);
+      // remove after animation
+      setTimeout(()=> el.remove(), (parseFloat(el.style.animationDuration) + parseFloat(el.style.animationDelay)) * 1000 + 800);
+    }
+
+    // -- Initial soft drifting hearts (background ambience) --
+    (function spawnBackgroundHearts(){
+      const colors = ['#ff9bb3','#ff6e9f','#ffd1df'];
+      for(let i=0;i<8;i++){
+        const x = Math.random()*100;
+        const size = 18 + Math.random()*24;
+        const delay = Math.random()*6;
+        const color = colors[Math.floor(Math.random()*colors.length)];
+        createHeart(x, size, delay, color);
+      }
+      // keep spawning slowly
+      setInterval(()=>{
+        const x = Math.random()*100;
+        const size = 14 + Math.random()*26;
+        const delay = 0;
+        const color = ['#ff9bb3','#ff6e9f','#ffd1df'][Math.floor(Math.random()*3)];
+        createHeart(x, size, delay, color);
+      }, 2600);
+    })();
+
+    // -- Message gradual reveal --
+    const rawText = document.getElementById('messageBlock').textContent.trim();
+    const lines = rawText.split(/\n+/).map(s => s.trim()).filter(Boolean);
+
+    const messageEl = document.getElementById('messageBlock');
+    messageEl.innerHTML = ''; // clear original raw text
+
+    lines.forEach((ln, idx) => {
+      const p = document.createElement('p');
+      p.className = 'line';
+      p.textContent = ln; // exact text preserved
+      messageEl.appendChild(p);
+    });
+
+    // reveal lines one by one
+    const lineEls = Array.from(document.querySelectorAll('.line'));
+    lineEls.forEach((el, i) => {
+      setTimeout(()=> el.classList.add('visible'), 800 + i*700);
+    });
+
+    // reveal title softly too (already visible) - optionally we keep it as-is
+
+    // -- Audio control & autoplay attempt --
+    const audio = document.getElementById('bgAudio');
+    audio.volume = 0.18; // low initial volume for a soft effect
+
+    function tryPlayAudio(){
+      const playPromise = audio.play();
+      if (playPromise !== undefined){
+        playPromise.then(()=> {
+          // playing
+        }).catch(()=> {
+          // autoplay blocked; in many browsers this will be blocked.
+          // We'll show a subtle hint by slightly bouncing the forgive button to invite a tap.
+          const btn = document.getElementById('forgiveBtn');
+          btn.style.animation = 'bounce 1.6s ease-in-out infinite';
+          setTimeout(()=> btn.style.animation = '', 6000);
+        });
+      }
+    }
+
+    // Attempt to autoplay after a tiny delay (gives browser a better chance)
+    window.addEventListener('load', ()=> {
+      setTimeout(tryPlayAudio, 350);
+    });
+
+    // If user interacts anywhere, ensure audio plays
+    ['click','touchstart','keydown'].forEach(evt=>{
+      window.addEventListener(evt, function onFirst(){
+        tryPlayAudio();
+        // remove the listeners after first interaction
+        ['click','touchstart','keydown'].forEach(e => window.removeEventListener(e, onFirst));
+      });
+    });
+
+    // -- Forgive button action: burst hearts and show final line --
+    const forgiveBtn = document.getElementById('forgiveBtn');
+    const finalLine = document.getElementById('finalLine');
+
+    function burstHearts(count=18){
+      const colors = ['#ff88b3','#ffd1df','#ff5e9e','#fff1f6'];
+      for(let i=0;i<count;i++){
+        const x = 10 + Math.random()*80;
+        const size = 18 + Math.random()*36;
+        const delay = Math.random()*0.6;
+        const color = colors[Math.floor(Math.random()*colors.length)];
+        createHeart(x, size, delay, color);
+      }
+    }
+
+    forgiveBtn.addEventListener('click', ()=>{
+      // 1) play a small uplifting chime (using WebAudio so we don't need extra assets)
+      try{
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(520, ctx.currentTime);
+        g.gain.setValueAtTime(0, ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0.07, ctx.currentTime + 0.01);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start();
+        o.frequency.exponentialRampToValueAtTime(780, ctx.currentTime + 0.18);
+        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+        setTimeout(()=> { o.stop(); ctx.close(); }, 600);
+      }catch(e){ /* ignore if audio context blocked */ }
+
+      // 2) burst hearts
+      burstHearts(26);
+      // 3) show final message
+      setTimeout(()=> finalLine.classList.add('visible'), 400);
+      // 4) slightly increase music volume temporarily as emotional swell
+      const orig = audio.volume;
+      audio.volume = Math.min(0.32, orig + 0.12);
+      setTimeout(()=> audio.volume = orig, 2200);
+      // 5) disable the button so she can savor the moment
+      forgiveBtn.disabled = true;
+      forgiveBtn.style.opacity = 0.9;
+    });
+
+    // Accessibility: allow pressing Enter when focused
+    forgiveBtn.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' ') forgiveBtn.click();
+    });
+
+    // Small CSS animation keyframes injected for bounce hint (used if autoplay blocked)
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `@keyframes bounce{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}`;
+    document.head.appendChild(styleSheet);
+
+    // End of script
+  </script>
+</body>
+</html>
